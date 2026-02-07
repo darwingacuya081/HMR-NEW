@@ -174,6 +174,7 @@ function addEquipRow(data = {}){
   const x = makeXBtn(() => { wrap.remove(); save(); });
 
   wrap.append(eq, before, after, hmr, x);
+  wrap.dataset.kind = "equipmentRow";
   rowsEquip.appendChild(wrap);
 
   compute();
