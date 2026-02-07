@@ -252,6 +252,10 @@ async function submitAll(){
 
     if(json.status === "ok"){
       setStatus(`Submitted ✅ ${json.message || ""}`.trim());
+      
+      // ✅ NEW: after submit, move After -> Before (equipment section)
+      rollEquipmentAfterToBefore();
+      
     } else {
       setStatus(`Submit failed: ${json.message || text}`, false);
     }
@@ -303,6 +307,34 @@ async function refreshMasterData() {
   } catch (e) {
     setStatus("MasterData fetch error: " + e.message, false);
   }
+}
+
+function rollEquipmentAfterToBefore() {
+  // For each equipment row: before = after; clear after; recompute hmr
+  [...rowsEquip.children].forEach(row => {
+    const inputs = row.querySelectorAll("input");
+    if (!inputs || inputs.length < 4) return;
+
+    const eqName = inputs[0];
+    const before = inputs[1];
+    const after  = inputs[2];
+    const hmr    = inputs[3];
+
+    // Only roll if there is an equipment name (real row)
+    if (!eqName.value.trim()) return;
+
+    // If after is empty, do nothing
+    if (String(after.value || "").trim() === "") return;
+
+    before.value = after.value;
+    after.value = "";
+
+    // recompute HMR
+    const v = num(after.value) - num(before.value); // after now "", so HMR becomes 0
+    hmr.value = (Number.isFinite(v) ? v : 0).toFixed(2);
+  });
+
+  save(); // persist the new state (OT still won't be saved)
 }
 
 // INIT
