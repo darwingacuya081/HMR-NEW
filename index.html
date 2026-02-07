@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daily HMR Entry</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <h1>Daily HMR Entry</h1>
+
+    <div class="topRow">
+      <div class="field">
+        <label>Date</label>
+        <input id="date" type="date" />
+      </div>
+
+      <div class="field">
+        <label>CP1 Volume</label>
+        <input id="cp1" type="number" step="0.01" placeholder="0" />
+      </div>
+
+      <div class="field">
+        <label>CP2 Volume</label>
+        <input id="cp2" type="number" step="0.01" placeholder="0" />
+      </div>
+
+      <div class="field scriptUrl">
+        <label>Apps Script Web App URL</label>
+        <input id="scriptUrl" type="text" placeholder="Paste your Web App URL here" />
+      </div>
+    </div>
+
+    <!-- MANPOWER -->
+    <section class="card" data-role="HEO">
+      <div class="cardHead">
+        <h2>HEO</h2>
+        <button class="btn" data-add="HEO">+ Add HEO</button>
+      </div>
+      <div class="rows" id="rows-HEO"></div>
+    </section>
+
+    <section class="card" data-role="Spotter">
+      <div class="cardHead">
+        <h2>Spotter</h2>
+        <button class="btn" data-add="Spotter">+ Add Spotter</button>
+      </div>
+      <div class="rows" id="rows-Spotter"></div>
+    </section>
+
+    <section class="card" data-role="Helper">
+      <div class="cardHead">
+        <h2>Helpers</h2>
+        <button class="btn" data-add="Helper">+ Add Helper</button>
+      </div>
+      <div class="rows" id="rows-Helper"></div>
+    </section>
+
+    <!-- EQUIPMENT HMR -->
+    <section class="card">
+      <div class="cardHead">
+        <h2>Equipment HMR</h2>
+        <button class="btn" id="addEquipment">+ Add Equipment</button>
+      </div>
+
+      <div class="equipHeader">
+        <div>Equipment</div>
+        <div>Before</div>
+        <div>After</div>
+        <div>HMR</div>
+        <div></div>
+      </div>
+
+      <div class="rows" id="rows-Equipment"></div>
+    </section>
+
+    <div class="bottomBar">
+      <div class="leftBtns">
+        <button class="btnSecondary" id="resetOt">Reset OT</button>
+        <button class="btnDanger" id="clearSaved">Clear Saved</button>
+      </div>
+      <button class="btnPrimary" id="submitAll">Submit All Records</button>
+    </div>
+
+    <p class="status" id="status"></p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
