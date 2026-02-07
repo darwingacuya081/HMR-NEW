@@ -159,6 +159,24 @@ function addManRow(role, data = {}){
   getManContainer(role).appendChild(wrap);
 }
 
+// ---------- SERIALIZE MANPOWER ----------
+function serializeMan(container){
+  const rows = [];
+
+  [...container.children].forEach(row => {
+    const inputs = row.querySelectorAll("input");
+
+    if (inputs.length < 3) return;
+
+    rows.push({
+      name: inputs[0].value || "",
+      workHours: inputs[1].value || "",
+      otHours: inputs[2].value || ""
+    });
+  });
+
+  return rows;
+}
 
 // ---------- EQUIPMENT ----------
 function addEquipRow(data = {}){
