@@ -201,8 +201,8 @@ h2{margin:0;font-size:18px}
     }
   }
 
-  /.manHeader,
-  /.equipHeader{
+  .manHeader,
+  .equipHeader{
     display:none !important; /* keep your clean mobile look */
   }
 
