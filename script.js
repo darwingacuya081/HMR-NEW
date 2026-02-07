@@ -389,7 +389,7 @@ function scheduleCloudDraftSave() {
 async function saveDraftToCloud() {
   const url = (elScriptUrl.value || "").trim();
   const key = (elDraftKey.value || "").trim();
-  if (!url || !key) return; // only if configured
+  if (!url || !key) return;
 
   const payload = {
     action: "draftSave",
@@ -400,10 +400,12 @@ async function saveDraftToCloud() {
   try {
     await fetch(url, {
       method: "POST",
+      mode: "no-cors", // ✅ IMPORTANT for GitHub Pages -> Apps Script
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload)
     });
-    setStatus("Draft synced to cloud ✅");
+
+    setStatus("Draft sent to cloud ✅ (check Drafts sheet)");
   } catch (e) {
     setStatus("Cloud draft sync failed: " + e.message, false);
   }
