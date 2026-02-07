@@ -199,58 +199,6 @@ h2{margin:0;font-size:18px}
   input, button{
     max-width:100%;
   }
-  
-  /* ===== HEADERS (MOBILE) - match your row layout ===== */
-
-  /* Manpower header matches .rowMan layout:
-    name full width, then Work + OT + (X column space) */
-  .manHeader{
-    display:grid !important;
-    grid-template-columns: 1fr 1fr 44px !important;
-    grid-template-areas:
-      "name name name"
-      "work ot x";
-    gap:8px !important;
-    padding:0 2px 8px 2px;
-    color:var(--muted);
-    font-size:12px;
-  }
-
-  .manHeader > :nth-child(1){ grid-area:name; }
-  .manHeader > :nth-child(2){ grid-area:work; }
-  .manHeader > :nth-child(3){ grid-area:ot; }
-  .manHeader > :nth-child(4){ grid-area:x; }
-
-  /* hide the "X" label (keep the space so it aligns) */
-  .manHeader > :nth-child(4){
-    visibility:hidden;
-  }
-
-  /* Equipment header matches .rowEq layout:
-    eq full width, then Before + After + (X space), then HMR full width */
-  .equipHeader{
-    display:grid !important;
-    grid-template-columns: 1fr 1fr 44px !important;
-    grid-template-areas:
-      "eq eq eq"
-      "before after x"
-      "hmr hmr hmr";
-    gap:8px !important;
-    padding:0 2px 8px 2px;
-    color:var(--muted);
-    font-size:12px;
-  }
-
-  .equipHeader > :nth-child(1){ grid-area:eq; }      /* Equipment */
-  .equipHeader > :nth-child(2){ grid-area:before; }  /* Before */
-  .equipHeader > :nth-child(3){ grid-area:after; }   /* After */
-  .equipHeader > :nth-child(4){ grid-area:hmr; }     /* HMR */
-  .equipHeader > :nth-child(5){ grid-area:x; }       /* empty */
-
-  /* hide the last "empty/X" header cell (keep alignment space) */
-  .equipHeader > :nth-child(5){
-    visibility:hidden;
-  }
 
   /* ===== MANPOWER ROWS (no overflow) =====
      order in HTML: name, work, ot, X

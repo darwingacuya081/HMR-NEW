@@ -149,7 +149,6 @@ function addManRow(role, data = {}){
   wrap.append(cName, cWork, cOt, cX);
 }
 
-
 function serializeMan(container){
   const rows = [];
   [...container.children].forEach(r => {
