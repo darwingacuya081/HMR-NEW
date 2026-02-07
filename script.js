@@ -136,7 +136,7 @@ function addManRow(role, data = {}){
   [name, work, ot].forEach(el => el.addEventListener("input", save));
 
   getManContainer(role).appendChild(wrap);
-  wrap.append(Name, Work, Ot, X);
+  wrap.append(name, work, ot, x);
 }
 
 function serializeMan(container){
