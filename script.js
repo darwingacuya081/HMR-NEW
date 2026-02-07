@@ -264,34 +264,6 @@ async function submitAll(){
   }
 }
 
-function rollEquipmentAfterToBefore() {
-  // For each equipment row: before = after; clear after; recompute hmr
-  [...rowsEquip.children].forEach(row => {
-    const inputs = row.querySelectorAll("input");
-    if (!inputs || inputs.length < 4) return;
-
-    const eqName = inputs[0];
-    const before = inputs[1];
-    const after  = inputs[2];
-    const hmr    = inputs[3];
-
-    // Only roll if there is an equipment name (real row)
-    if (!eqName.value.trim()) return;
-
-    // If after is empty, do nothing
-    if (String(after.value || "").trim() === "") return;
-
-    before.value = after.value;
-    after.value = "";
-
-    // recompute HMR
-    const v = num(after.value) - num(before.value); // after now "", so HMR becomes 0
-    hmr.value = (Number.isFinite(v) ? v : 0).toFixed(2);
-  });
-
-  save(); // persist the new state (OT still won't be saved)
-}
-
 document.getElementById("submitAll").addEventListener("click", submitAll);
 
 function fillDatalist(id, items) {
@@ -335,6 +307,37 @@ async function refreshMasterData() {
   } catch (e) {
     setStatus("MasterData fetch error: " + e.message, false);
   }
+}
+
+function rollEquipmentAfterToBefore() {
+  [...rowsEquip.children].forEach(row => {
+    const inputs = row.querySelectorAll("input");
+    if (!inputs || inputs.length < 4) return;
+
+    const eqName = inputs[0];
+    const before = inputs[1];
+    const after  = inputs[2];
+    const hmr    = inputs[3];
+
+    const eq = (eqName.value || "").trim();
+    const a  = (after.value || "").trim();
+
+    // only roll real rows with AFTER value
+    if (!eq) return;
+    if (a === "") return;
+
+    // ✅ move After -> Before
+    before.value = a;
+
+    // ✅ clear After
+    after.value = "";
+
+    // ✅ clear HMR (so next time it recomputes when you type new After)
+    hmr.value = "";
+  });
+
+  // persist changes
+  save();
 }
 
 // INIT
