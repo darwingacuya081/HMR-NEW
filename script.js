@@ -220,15 +220,31 @@ document.getElementById("clearSaved").addEventListener("click", () => {
 
 // ---------- Submit ----------
 function buildPayload(){
+  const manpowerAll = [
+    ...serializeMan(rowsHEO).map(r => ({ role:"HEO", ...r })),
+    ...serializeMan(rowsSpotter).map(r => ({ role:"Spotter", ...r })),
+    ...serializeMan(rowsHelper).map(r => ({ role:"Helper", ...r }))
+  ];
+
+  // ✅ Filter rule: don't submit if Work Hours is blank (or not a number)
+  const manpowerFiltered = manpowerAll.filter(r => {
+    const name = String(r.name || "").trim();
+    const work = String(r.workHours || "").trim();
+
+    if (!name) return false;       // no name = ignore
+    if (!work) return false;       // no work hours = ignore
+
+    // Optional: ensure it's a valid number (uncomment if you want)
+    // if (!Number.isFinite(parseFloat(work))) return false;
+
+    return true;
+  });
+
   return {
     date: elDate.value || "",
     cp1: elCP1.value || "",
     cp2: elCP2.value || "",
-    manpower: [
-      ...serializeMan(rowsHEO).map(r => ({ role:"HEO", ...r })),
-      ...serializeMan(rowsSpotter).map(r => ({ role:"Spotter", ...r })),
-      ...serializeMan(rowsHelper).map(r => ({ role:"Helper", ...r }))
-    ],
+    manpower: manpowerFiltered,
     equipment: serializeEquip(rowsEquip)
   };
 }
