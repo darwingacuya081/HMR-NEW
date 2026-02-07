@@ -135,13 +135,8 @@ function addManRow(role, data = {}){
 
   [name, work, ot].forEach(el => el.addEventListener("input", save));
 
-  // X button cell (no label)
-  const cX = document.createElement("div");
-  cX.className = "cell xCell";
-  cX.appendChild(x);
-
   getManContainer(role).appendChild(wrap);
-  wrap.append(cName, cWork, cOt, cX);
+  wrap.append(Name, Work, Ot, X);
 }
 
 function serializeMan(container){
