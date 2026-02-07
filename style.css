@@ -86,11 +86,6 @@ h2{margin:0;font-size:18px}
   padding-left:2px;
 }
 
-/* X button cell */
-.xCell{
-  align-items:flex-end;
-}
-
 .manHeader{
   display:grid;
   grid-template-columns: 1.2fr 170px 170px 44px;
