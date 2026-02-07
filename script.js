@@ -443,6 +443,7 @@ function loadDraftFromCloud() {
   const u = new URL(url);
   u.searchParams.set("action", "draftGet");
   u.searchParams.set("key", key);
+  u.searchParams.set("src", (elScriptUrl.value || "").trim());  // ✅ ADD THIS
   u.searchParams.set("cb", cb);
 
   // Define callback
