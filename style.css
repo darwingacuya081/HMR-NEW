@@ -75,7 +75,7 @@ h2{margin:0;font-size:18px}
 .cell{
   display:flex;
   flex-direction:column;
-  gap:6px;
+  gap:10px;
   min-width:0; /* important to prevent overflow */
 }
 
