@@ -199,40 +199,48 @@ h2{margin:0;font-size:18px}
     font-size: 13px;
   }
 
-  /* Manpower rows become vertical stack */
-  .rowMan {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 8px;
-    padding: 10px;
-    border-radius: 12px;
+  /* Manpower: Name full width then Work/OT side-by-side then X */
+  .rowMan{
+    display:grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap:8px;
+    padding:10px;
+    border-radius:12px;
   }
-
-  .rowMan input,
-  .rowEq input {
-    width: 100%;
-    min-width: 0;
+  
+  /* Name spans full width */
+  .rowMan input:nth-child(1){
+    grid-column: 1 / -1;
   }
-
-  /* Put X button aligned right */
-  .rowMan .xbtn,
-  .rowEq .xbtn {
-    width: 44px;
+  
+  /* X button spans full width and aligns right */
+  .rowMan .xbtn{
+    grid-column: 1 / -1;
     justify-self: end;
+    width: 56px;
   }
 
-  /* Equipment header can be hidden on mobile (optional) */
-  /.equipHeader {
-    /display: none;
-  /}
-
-  /* Equipment rows become vertical stack */
-  .rowEq {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 8px;
-    padding: 10px;
-    border-radius: 12px;
+  /* Equipment: Name full width then Before/After side-by-side then HMR then X */
+  .rowEq{
+    display:grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap:8px;
+    padding:10px;
+    border-radius:12px;
+  }
+  
+  .rowEq input:nth-child(1){
+    grid-column: 1 / -1; /* equipment name */
+  }
+  
+  .rowEq input:nth-child(4){
+    grid-column: 1 / -1; /* HMR full width */
+  }
+  
+  .rowEq .xbtn{
+    grid-column: 1 / -1;
+    justify-self: end;
+    width: 56px;
   }
 
   /* Bottom bar stack */
