@@ -50,6 +50,7 @@ function save(){
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   setStatus("Saved locally (OT will NOT restore after refresh).");
+  scheduleCloudDraftSave();
 }
 
 function load(){
@@ -419,7 +420,9 @@ async function loadDraftFromCloud() {
     u.searchParams.set("key", key);
 
     const res = await fetch(u.toString(), { method: "GET" });
-    const json = await res.json();
+    const text = await res.text();
+    let json = null;
+    try { json = JSON.parse(text); } catch {}
 
     if (json.status !== "ok") return setStatus(json.message || "Draft load failed", false);
     if (!json.data) return setStatus("No saved draft found for that key.", false);
@@ -445,9 +448,6 @@ async function loadDraftFromCloud() {
     // (leave as-is; your save() already blanks OT in local persistence)
 
     save(); // store locally too
-    scheduleCloudDraftSave();
-    btnLoadDraft.addEventListener("click", loadDraftFromCloud);
-    elDraftKey.addEventListener("input", save);
 
     setStatus("Loaded draft from cloud ✅");
   } catch (e) {
@@ -455,11 +455,25 @@ async function loadDraftFromCloud() {
   }
 }
 
+// --- Draft sync listeners (attach once) ---
+if (btnLoadDraft) btnLoadDraft.addEventListener("click", loadDraftFromCloud);
+if (elDraftKey) elDraftKey.addEventListener("input", save);
+
+function autoLoadDraftIfReady() {
+  const url = (elScriptUrl.value || "").trim();
+  const key = (elDraftKey.value || "").trim();
+  if (url && key) loadDraftFromCloud();
+}
 // INIT
 load();
 
-// After load()
+// Auto-load cloud draft if Script URL + DraftKey exist
+if ((elScriptUrl.value || "").trim() && (elDraftKey.value || "").trim()) {
+  loadDraftFromCloud();
+}
+
 refreshMasterData();
+autoLoadDraftIfReady();
 
 // When scriptUrl changes, re-fetch autocomplete
 elScriptUrl.addEventListener("change", refreshMasterData);
