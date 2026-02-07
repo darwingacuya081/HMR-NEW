@@ -216,8 +216,23 @@ h2{margin:0;font-size:18px}
   .manHeader div:nth-child(3){ grid-area:ot; }
   .manHeader div:nth-child(4){ grid-area:x; }
 
-  /* Equipment: hide desktop header, show mobile header */
-  .equipHeader{ display:none !important; }
+  /* MOBILE: show compact headers (does NOT affect the input boxes) */
+  .manHeader,
+  .equipHeader{
+    display:grid !important;
+    grid-template-columns: 1fr 1fr 1fr; /* simple labels */
+    gap:10px;
+    font-size:12px;
+    color:var(--muted);
+    padding: 0 2px 10px 2px;
+  }
+
+  /* Hide the 4th/5th header columns on mobile (X column / empty column) */
+  .manHeader > :nth-child(4),
+  .equipHeader > :nth-child(4),
+  .equipHeader > :nth-child(5){
+    display:none;
+  }
 
   .equipHeaderMobile{
     display:grid !important;
