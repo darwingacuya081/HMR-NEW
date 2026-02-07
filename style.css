@@ -71,6 +71,26 @@ h2{margin:0;font-size:18px}
   align-items:center;
 }
 
+/* Each "cell" holds a mini label + the input */
+.cell{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  min-width:0; /* important to prevent overflow */
+}
+
+.miniLabel{
+  display:none; /* hidden on laptop by default */
+  font-size:12px;
+  color:var(--muted);
+  padding-left:2px;
+}
+
+/* X button cell */
+.xCell{
+  align-items:flex-end;
+}
+
 .manHeader{
   display:grid;
   grid-template-columns: 1.2fr 170px 170px 44px;
@@ -176,6 +196,15 @@ h2{margin:0;font-size:18px}
     font-size: 13px;
   }
 
+  .miniLabel{
+    display:block; /* ✅ show labels above each input on mobile */
+  }
+
+  /* Make sure inputs can shrink inside grid */
+  input, button{
+    max-width:100%;
+  }
+  
   /* Manpower header becomes compact stacked label row */
   .manHeader{
     display:grid !important;

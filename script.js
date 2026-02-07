@@ -134,9 +134,21 @@ function addManRow(role, data = {}){
   const x = makeXBtn(() => { wrap.remove(); save(); });
 
   [name, work, ot].forEach(el => el.addEventListener("input", save));
+
+  // ✅ Wrap each input with a mini header (used on mobile)
+  const cName = wrapWithMiniLabel("Name", name);
+  const cWork = wrapWithMiniLabel("Work", work);
+  const cOt   = wrapWithMiniLabel("OT", ot);
+
+  // X button cell (no label)
+  const cX = document.createElement("div");
+  cX.className = "cell xCell";
+  cX.appendChild(x);
+
   getManContainer(role).appendChild(wrap);
-  wrap.append(name, work, ot, x);
+  wrap.append(cName, cWork, cOt, cX);
 }
+
 
 function serializeMan(container){
   const rows = [];
@@ -157,11 +169,12 @@ function addEquipRow(data = {}){
   wrap.className = "rowEq";
 
   const eq = makeInput("text","Equipment Name", data.equipmentName || "");
-  const before = makeInput("number","Before", data.before || "");
-  const after = makeInput("number","After", data.after || "");
+  eq.setAttribute("list", "dl-equipment");
 
+  const before = makeInput("number","Before", data.before || "");
+  const after  = makeInput("number","After",  data.after || "");
   before.step = "0.01";
-  after.step = "0.01";
+  after.step  = "0.01";
 
   const hmr = makeInput("number","HMR", data.hmr || "");
   hmr.step = "0.01";
@@ -175,17 +188,27 @@ function addEquipRow(data = {}){
 
   before.addEventListener("input", () => { compute(); save(); });
   after.addEventListener("input", () => { compute(); save(); });
-  eq.setAttribute("list", "dl-equipment");
   eq.addEventListener("input", save);
 
   const x = makeXBtn(() => { wrap.remove(); save(); });
 
-  wrap.append(eq, before, after, hmr, x);
+  // ✅ Wrap each input with a mini header (used on mobile)
+  const cEq     = wrapWithMiniLabel("Equipment", eq);
+  const cBefore = wrapWithMiniLabel("Before", before);
+  const cAfter  = wrapWithMiniLabel("After", after);
+  const cHmr    = wrapWithMiniLabel("HMR", hmr);
+
+  const cX = document.createElement("div");
+  cX.className = "cell xCell";
+  cX.appendChild(x);
+
+  wrap.append(cEq, cBefore, cAfter, cHmr, cX);
   wrap.dataset.kind = "equipmentRow";
   rowsEquip.appendChild(wrap);
 
   compute();
 }
+
 
 function serializeEquip(container){
   const rows = [];
@@ -506,6 +529,19 @@ function autoLoadDraftIfReady() {
   const key = (elDraftKey.value || "").trim();
   if (url && key) loadDraftFromCloud();
 }
+
+function wrapWithMiniLabel(labelText, controlEl) {
+  const box = document.createElement("div");
+  box.className = "cell";
+
+  const lab = document.createElement("div");
+  lab.className = "miniLabel";
+  lab.textContent = labelText;
+
+  box.append(lab, controlEl);
+  return box;
+}
+
 
 // INIT
 load();
