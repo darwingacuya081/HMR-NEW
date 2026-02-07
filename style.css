@@ -121,6 +121,27 @@ h2{margin:0;font-size:18px}
    ========================= */
 @media (max-width: 768px) {
 
+  /* Make inputs/buttons not look "zoomed" on mobile */
+  body{
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  
+  input, button{
+    font-size: 16px; /* prevents iOS auto-zoom and improves readability */
+  }
+  
+  /* Ensure cards and grids never exceed screen width */
+  .wrap, .card, .rows{
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  /* Make sure long inputs (like Script URL) wrap and don't stretch page */
+  input{
+    max-width: 100%;
+  }
+
   /* prevent sideways scroll */
   html, body {
     width: 100%;
