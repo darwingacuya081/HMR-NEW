@@ -71,6 +71,15 @@ h2{margin:0;font-size:18px}
   align-items:center;
 }
 
+.manHeader{
+  display:grid;
+  grid-template-columns: 1.2fr 170px 170px 44px;
+  gap:10px;
+  color:var(--muted);
+  font-size:12px;
+  padding:0 2px 8px 2px;
+}
+
 .equipHeader{
   display:grid;
   grid-template-columns: 1.2fr 170px 170px 170px 44px;
@@ -78,6 +87,13 @@ h2{margin:0;font-size:18px}
   color:var(--muted);
   font-size:12px;
   padding:0 2px 8px 2px;
+}
+
+.equipHeaderMobile{
+  display:none; /* only show on mobile */
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:8px;
 }
 
 .readonly{
@@ -115,6 +131,7 @@ h2{margin:0;font-size:18px}
 }
 .leftBtns{display:flex;gap:10px;flex-wrap:wrap}
 .status{margin-top:10px;color:var(--muted)}
+
 
 /* =========================
    MOBILE RESPONSIVE LAYOUT
@@ -159,8 +176,40 @@ h2{margin:0;font-size:18px}
     font-size: 13px;
   }
 
-  /* Hide the equipment header row on mobile */
-  .equipHeader { display: none; }
+  /* Manpower header becomes compact stacked label row */
+  .manHeader{
+    display:grid !important;
+    grid-template-columns: 1fr 1fr 44px !important;
+    grid-template-areas:
+      "name name name"
+      "work ot x";
+    gap:8px !important;
+    padding:0 2px 8px 2px;
+  }
+
+  .manHeader div:nth-child(1){ grid-area:name; }
+  .manHeader div:nth-child(2){ grid-area:work; }
+  .manHeader div:nth-child(3){ grid-area:ot; }
+  .manHeader div:nth-child(4){ grid-area:x; }
+
+  /* Equipment: hide desktop header, show mobile header */
+  .equipHeader{ display:none !important; }
+
+  .equipHeaderMobile{
+    display:grid !important;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas:
+      "eq eq eq"
+      "before after hmr";
+    gap:8px;
+    padding:0 2px 8px 2px;
+  }
+
+  .equipHeaderMobile div:nth-child(1){ grid-area:eq; }
+  .equipHeaderMobile div:nth-child(2){ grid-area:before; }
+  .equipHeaderMobile div:nth-child(3){ grid-area:after; }
+  .equipHeaderMobile div:nth-child(4){ grid-area:hmr; }
+
 
   /* ===== MANPOWER ROWS (no overflow) =====
      order in HTML: name, work, ot, X
