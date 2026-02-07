@@ -404,6 +404,31 @@ async function saveDraftToCloud() {
   }
 }
 
+function saveLocalSilent(){
+  const data = {
+    header: {
+      date: elDate.value || "",
+      cp1: elCP1.value || "",
+      cp2: elCP2.value || "",
+      scriptUrl: elScriptUrl.value || "",
+      draftKey: elDraftKey.value || ""
+    },
+    manpower: {
+      HEO: serializeMan(rowsHEO),
+      Spotter: serializeMan(rowsSpotter),
+      Helper: serializeMan(rowsHelper)
+    },
+    equipment: serializeEquip(rowsEquip)
+  };
+
+  // OT rule: blank OT before saving
+  ["HEO","Spotter","Helper"].forEach(role => {
+    data.manpower[role] = data.manpower[role].map(r => ({...r, otHours:""}));
+  });
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
 function loadDraftFromCloud() {
   const url = (elScriptUrl.value || "").trim();
   const key = (elDraftKey.value || "").trim();
@@ -448,6 +473,7 @@ function loadDraftFromCloud() {
       (d.manpower?.Helper || []).forEach(r => addManRow("Helper", r));
       (d.equipment || []).forEach(r => addEquipRow(r));
 
+      saveLocalSilent()
       setStatus("Loaded draft from cloud ✅");
     } finally {
       // cleanup
