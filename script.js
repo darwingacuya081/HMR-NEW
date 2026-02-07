@@ -11,6 +11,10 @@ const rowsSpotter = document.getElementById("rows-Spotter");
 const rowsHelper = document.getElementById("rows-Helper");
 const rowsEquip = document.getElementById("rows-Equipment");
 
+const elDraftKey = document.getElementById("draftKey");
+const btnLoadDraft = document.getElementById("loadDraft");
+
+
 function setStatus(msg, ok = true){
   statusEl.textContent = msg;
   statusEl.style.color = ok ? "#9fb0c7" : "#ff9aa3";
@@ -28,7 +32,8 @@ function save(){
       date: elDate.value || "",
       cp1: elCP1.value || "",
       cp2: elCP2.value || "",
-      scriptUrl: elScriptUrl.value || ""
+      scriptUrl: elScriptUrl.value || "",
+      draftKey: elDraftKey.value || ""
     },
     manpower: {
       HEO: serializeMan(rowsHEO),
@@ -64,6 +69,7 @@ function load(){
     elCP1.value = data.header?.cp1 || "";
     elCP2.value = data.header?.cp2 || "";
     elScriptUrl.value = data.header?.scriptUrl || "";
+    elDraftKey.value = data.header?.draftKey || "";
 
     rowsHEO.innerHTML = "";
     rowsSpotter.innerHTML = "";
@@ -353,6 +359,100 @@ function rollEquipmentAfterToBefore() {
 
   // persist changes
   save();
+}
+
+function buildDraftObject() {
+  // Same structure you already store locally
+  return {
+    header: {
+      date: elDate.value || "",
+      cp1: elCP1.value || "",
+      cp2: elCP2.value || "",
+    },
+    manpower: {
+      HEO: serializeMan(rowsHEO),
+      Spotter: serializeMan(rowsSpotter),
+      Helper: serializeMan(rowsHelper),
+    },
+    equipment: serializeEquip(rowsEquip)
+  };
+}
+
+let draftSaveTimer = null;
+
+function scheduleCloudDraftSave() {
+  clearTimeout(draftSaveTimer);
+  draftSaveTimer = setTimeout(saveDraftToCloud, 600); // debounce
+}
+
+async function saveDraftToCloud() {
+  const url = (elScriptUrl.value || "").trim();
+  const key = (elDraftKey.value || "").trim();
+  if (!url || !key) return; // only if configured
+
+  const payload = {
+    action: "draftSave",
+    key,
+    data: buildDraftObject()
+  };
+
+  try {
+    await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+    setStatus("Draft synced to cloud ✅");
+  } catch (e) {
+    setStatus("Cloud draft sync failed: " + e.message, false);
+  }
+}
+
+async function loadDraftFromCloud() {
+  const url = (elScriptUrl.value || "").trim();
+  const key = (elDraftKey.value || "").trim();
+  if (!url || !key) return setStatus("Set Script URL and Draft Key first.", false);
+
+  try {
+    const u = new URL(url);
+    u.searchParams.set("action", "draftGet");
+    u.searchParams.set("key", key);
+
+    const res = await fetch(u.toString(), { method: "GET" });
+    const json = await res.json();
+
+    if (json.status !== "ok") return setStatus(json.message || "Draft load failed", false);
+    if (!json.data) return setStatus("No saved draft found for that key.", false);
+
+    // apply draft data
+    const d = json.data;
+
+    elDate.value = d.header?.date || elDate.value;
+    elCP1.value = d.header?.cp1 || elCP1.value;
+    elCP2.value = d.header?.cp2 || elCP2.value;
+
+    rowsHEO.innerHTML = "";
+    rowsSpotter.innerHTML = "";
+    rowsHelper.innerHTML = "";
+    rowsEquip.innerHTML = "";
+
+    (d.manpower?.HEO || []).forEach(r => addManRow("HEO", r));
+    (d.manpower?.Spotter || []).forEach(r => addManRow("Spotter", r));
+    (d.manpower?.Helper || []).forEach(r => addManRow("Helper", r));
+    (d.equipment || []).forEach(r => addEquipRow(r));
+
+    // OT rule still applies on reload if you want:
+    // (leave as-is; your save() already blanks OT in local persistence)
+
+    save(); // store locally too
+    scheduleCloudDraftSave();
+    btnLoadDraft.addEventListener("click", loadDraftFromCloud);
+    elDraftKey.addEventListener("input", save);
+
+    setStatus("Loaded draft from cloud ✅");
+  } catch (e) {
+    setStatus("Cloud draft load failed: " + e.message, false);
+  }
 }
 
 // INIT
