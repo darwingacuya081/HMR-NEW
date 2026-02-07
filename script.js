@@ -369,6 +369,8 @@ function buildDraftObject() {
       date: elDate.value || "",
       cp1: elCP1.value || "",
       cp2: elCP2.value || "",
+      scriptUrl: elScriptUrl.value || "",
+      draftKey: elDraftKey.value || ""
     },
     manpower: {
       HEO: serializeMan(rowsHEO),
