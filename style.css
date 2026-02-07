@@ -115,3 +115,119 @@ h2{margin:0;font-size:18px}
 }
 .leftBtns{display:flex;gap:10px;flex-wrap:wrap}
 .status{margin-top:10px;color:var(--muted)}
+
+/* =========================
+   MOBILE RESPONSIVE LAYOUT
+   ========================= */
+@media (max-width: 768px) {
+
+  /* prevent sideways scroll */
+  html, body {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .wrap {
+    max-width: 100%;
+    padding: 12px;
+  }
+
+  h1 {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+
+  /* Draft key area */
+  .field {
+    width: 100%;
+  }
+
+  /* Make the top row fields stack */
+  .topRow {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+
+  .topRow .field,
+  .topRow .field.scriptUrl {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Card spacing */
+  .card {
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .cardHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .cardHead h2 {
+    font-size: 16px;
+  }
+
+  /* Buttons smaller on mobile */
+  .btn, .btnPrimary, .btnSecondary, .btnDanger {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  /* Manpower rows become vertical stack */
+  .rowMan {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 12px;
+  }
+
+  .rowMan input,
+  .rowEq input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Put X button aligned right */
+  .rowMan .xbtn,
+  .rowEq .xbtn {
+    width: 44px;
+    justify-self: end;
+  }
+
+  /* Equipment header can be hidden on mobile (optional) */
+  .equipHeader {
+    display: none;
+  }
+
+  /* Equipment rows become vertical stack */
+  .rowEq {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 12px;
+  }
+
+  /* Bottom bar stack */
+  .bottomBar {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+
+  .leftBtns {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  #submitAll {
+    width: 100%;
+  }
+}
