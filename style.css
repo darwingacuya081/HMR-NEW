@@ -169,6 +169,11 @@ h2{margin:0;font-size:18px}
     font-size: 13px;
   }
 
+  .manHeader,
+  .equipHeader{
+    display:none !important; /* keep your clean mobile look */
+  }
+
   /* ===== MANPOWER ROWS (no overflow) =====
      order in HTML: name, work, ot, X
      make: name full width, then Work + OT + X in same line
