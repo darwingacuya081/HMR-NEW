@@ -112,10 +112,16 @@ function makeXBtn(onClick){
 }
 
 // ---------- MANPOWER ----------
-function getManContainer(role){
-  if(role === "HEO") return rowsHEO;
-  if(role === "Spotter") return rowsSpotter;
-  return rowsHelper;
+function makeCell(labelText, inputEl) {
+  const cell = document.createElement("div");
+  cell.className = "cell";
+
+  const lab = document.createElement("div");
+  lab.className = "miniLabel";
+  lab.textContent = labelText;
+
+  cell.append(lab, inputEl);
+  return cell;
 }
 
 function addManRow(role, data = {}){
@@ -135,21 +141,12 @@ function addManRow(role, data = {}){
 
   [name, work, ot].forEach(el => el.addEventListener("input", save));
 
-  getManContainer(role).appendChild(wrap);
-  wrap.append(name, work, ot, x);
-}
-
-function serializeMan(container){
-  const rows = [];
-  [...container.children].forEach(r => {
-    const inputs = r.querySelectorAll("input");
-    rows.push({
-      name: inputs[0]?.value || "",
-      workHours: inputs[1]?.value || "",
-      otHours: inputs[2]?.value || ""
-    });
-  });
-  return rows;
+  wrap.append(
+    makeCell("Name", name),
+    makeCell("Work Hours", work),
+    makeCell("OT Hours", ot),
+    x
+  );
 }
 
 // ---------- EQUIPMENT ----------
@@ -181,13 +178,17 @@ function addEquipRow(data = {}){
 
   const x = makeXBtn(() => { wrap.remove(); save(); });
 
-  wrap.append(eq, before, after, hmr, x);
-  wrap.dataset.kind = "equipmentRow";
-  rowsEquip.appendChild(wrap);
+  wrap.append(
+    makeCell("Equipment", eq),
+    makeCell("Before", before),
+    makeCell("After", after),
+    makeCell("HMR", hmr),
+    x
+  );
 
+  rowsEquip.appendChild(wrap);
   compute();
 }
-
 
 function serializeEquip(container){
   const rows = [];
