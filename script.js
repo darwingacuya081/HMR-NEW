@@ -400,6 +400,7 @@ async function saveDraftToCloud() {
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload)
     });
+    saveLocalSilent()
     setStatus("Draft saved to cloud ✅");
   } catch (e) {
     setStatus("Draft save failed: " + e.message, false);
