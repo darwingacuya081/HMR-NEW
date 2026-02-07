@@ -125,6 +125,12 @@ h2{margin:0;font-size:18px}
 .leftBtns{display:flex;gap:10px;flex-wrap:wrap}
 .status{margin-top:10px;color:var(--muted)}
 
+/* =========================
+   MOBILE-ONLY HEADERS
+   ========================= */
+.mobileHeader {
+  display: none;
+}
 
 /* =========================
    MOBILE RESPONSIVE LAYOUT
@@ -169,8 +175,34 @@ h2{margin:0;font-size:18px}
     font-size: 13px;
   }
 
-  .manHeader,
-  .equipHeader{
+    .mobileHeader {
+    display: grid;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 12px;
+    margin: 6px 0 10px 0;
+    padding-left: 4px;
+  }
+
+  /* Manpower header layout */
+    .manpowerHeader {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    /* Equipment header layout */
+    .equipmentHeader {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+    /* Push rows down so header has breathing space */
+    .rowMan,
+    .rowEq {
+      margin-top: 6px;
+    }
+  }
+
+  /.manHeader,
+  /.equipHeader{
     display:none !important; /* keep your clean mobile look */
   }
 
