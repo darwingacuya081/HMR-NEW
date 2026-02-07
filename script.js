@@ -181,11 +181,7 @@ function addEquipRow(data = {}){
 
   const x = makeXBtn(() => { wrap.remove(); save(); });
 
-  const cX = document.createElement("div");
-  cX.className = "cell xCell";
-  cX.appendChild(x);
-
-  wrap.append(cEq, cBefore, cAfter, cHmr, cX);
+  wrap.append(eq, before, after, hmr, x);
   wrap.dataset.kind = "equipmentRow";
   rowsEquip.appendChild(wrap);
 
