@@ -448,7 +448,6 @@ function loadDraftFromCloud() {
       (d.manpower?.Helper || []).forEach(r => addManRow("Helper", r));
       (d.equipment || []).forEach(r => addEquipRow(r));
 
-      save(); // stores locally + schedules cloud save
       setStatus("Loaded draft from cloud ✅");
     } finally {
       // cleanup
