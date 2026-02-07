@@ -262,5 +262,55 @@ async function submitAll(){
 
 document.getElementById("submitAll").addEventListener("click", submitAll);
 
+function fillDatalist(id, items) {
+  const dl = document.getElementById(id);
+  if (!dl) return;
+  dl.innerHTML = "";
+  (items || []).forEach(v => {
+    const opt = document.createElement("option");
+    opt.value = v;
+    dl.appendChild(opt);
+  });
+}
+
+async function refreshMasterData() {
+  const url = (elScriptUrl.value || "").trim();
+  if (!url) return;
+
+  try {
+    // Works whether your URL already has ? or not
+    const u = new URL(url);
+    u.searchParams.set("action", "masterdata");
+
+    const res = await fetch(u.toString(), { method: "GET" });
+    const text = await res.text();
+
+    let json;
+    try { json = JSON.parse(text); } catch { json = null; }
+
+    if (!json || json.status !== "ok") {
+      setStatus("MasterData fetch failed (check Web App access).", false);
+      return;
+    }
+
+    const d = json.data || {};
+    fillDatalist("dl-heo", d.HEO || []);
+    fillDatalist("dl-spotter", d.Spotter || []);
+    fillDatalist("dl-helper", d.Helper || []);
+    fillDatalist("dl-equipment", d.Equipment || []);
+
+    setStatus("Autocomplete lists updated from MasterData ✅");
+  } catch (e) {
+    setStatus("MasterData fetch error: " + e.message, false);
+  }
+}
+
 // INIT
 load();
+
+// After load()
+refreshMasterData();
+
+// When scriptUrl changes, re-fetch autocomplete
+elScriptUrl.addEventListener("change", refreshMasterData);
+elScriptUrl.addEventListener("blur", refreshMasterData);
