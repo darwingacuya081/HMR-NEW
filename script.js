@@ -135,11 +135,6 @@ function addManRow(role, data = {}){
 
   [name, work, ot].forEach(el => el.addEventListener("input", save));
 
-  // ✅ Wrap each input with a mini header (used on mobile)
-  const cName = wrapWithMiniLabel("Name", name);
-  const cWork = wrapWithMiniLabel("Work", work);
-  const cOt   = wrapWithMiniLabel("OT", ot);
-
   // X button cell (no label)
   const cX = document.createElement("div");
   cX.className = "cell xCell";
@@ -190,12 +185,6 @@ function addEquipRow(data = {}){
   eq.addEventListener("input", save);
 
   const x = makeXBtn(() => { wrap.remove(); save(); });
-
-  // ✅ Wrap each input with a mini header (used on mobile)
-  const cEq     = wrapWithMiniLabel("Equipment", eq);
-  const cBefore = wrapWithMiniLabel("Before", before);
-  const cAfter  = wrapWithMiniLabel("After", after);
-  const cHmr    = wrapWithMiniLabel("HMR", hmr);
 
   const cX = document.createElement("div");
   cX.className = "cell xCell";
@@ -528,19 +517,6 @@ function autoLoadDraftIfReady() {
   const key = (elDraftKey.value || "").trim();
   if (url && key) loadDraftFromCloud();
 }
-
-function wrapWithMiniLabel(labelText, controlEl) {
-  const box = document.createElement("div");
-  box.className = "cell";
-
-  const lab = document.createElement("div");
-  lab.className = "miniLabel";
-  lab.textContent = labelText;
-
-  box.append(lab, controlEl);
-  return box;
-}
-
 
 // INIT
 load();
