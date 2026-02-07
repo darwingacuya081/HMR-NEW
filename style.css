@@ -36,7 +36,7 @@ input{
   padding:10px;
   outline:none;
 }
-.scriptUrl input{min-width:320px}
+.scriptUrl input{min-width:0;width:100%}
 
 .card{
   background:var(--card);
