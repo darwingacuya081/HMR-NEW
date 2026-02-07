@@ -124,6 +124,14 @@ function makeCell(labelText, inputEl){
   return cell;
 }
 
+// ---------- MANPOWER CONTAINER RESOLVER ----------
+function getManContainer(role){
+  if (role === "HEO") return rowsHEO;
+  if (role === "Spotter") return rowsSpotter;
+  if (role === "Helper") return rowsHelper;
+  return null;
+}
+
 function addManRow(role, data = {}){
   const wrap = document.createElement("div");
   wrap.className = "rowMan";
