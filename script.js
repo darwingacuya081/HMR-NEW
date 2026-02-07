@@ -1,0 +1,263 @@
+const STORAGE_KEY = "hmr_ui_sketch_v1";
+
+const elDate = document.getElementById("date");
+const elCP1 = document.getElementById("cp1");
+const elCP2 = document.getElementById("cp2");
+const elScriptUrl = document.getElementById("scriptUrl");
+const statusEl = document.getElementById("status");
+
+const rowsHEO = document.getElementById("rows-HEO");
+const rowsSpotter = document.getElementById("rows-Spotter");
+const rowsHelper = document.getElementById("rows-Helper");
+const rowsEquip = document.getElementById("rows-Equipment");
+
+function setStatus(msg, ok = true){
+  statusEl.textContent = msg;
+  statusEl.style.color = ok ? "#9fb0c7" : "#ff9aa3";
+}
+
+function num(v){
+  const n = parseFloat(v);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function save(){
+  // Save everything EXCEPT OT values
+  const data = {
+    header: {
+      date: elDate.value || "",
+      cp1: elCP1.value || "",
+      cp2: elCP2.value || "",
+      scriptUrl: elScriptUrl.value || ""
+    },
+    manpower: {
+      HEO: serializeMan(rowsHEO),
+      Spotter: serializeMan(rowsSpotter),
+      Helper: serializeMan(rowsHelper)
+    },
+    equipment: serializeEquip(rowsEquip)
+  };
+
+  // OT rule: blank OT before saving
+  ["HEO","Spotter","Helper"].forEach(role => {
+    data.manpower[role] = data.manpower[role].map(r => ({...r, otHours:""}));
+  });
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  setStatus("Saved locally (OT will NOT restore after refresh).");
+}
+
+function load(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(!raw){
+    // Defaults: 3 rows each like your sketch
+    for(let i=0;i<3;i++) addManRow("HEO");
+    for(let i=0;i<3;i++) addManRow("Spotter");
+    for(let i=0;i<3;i++) addManRow("Helper");
+    addEquipRow(); addEquipRow();
+    return;
+  }
+
+  try{
+    const data = JSON.parse(raw);
+    elDate.value = data.header?.date || "";
+    elCP1.value = data.header?.cp1 || "";
+    elCP2.value = data.header?.cp2 || "";
+    elScriptUrl.value = data.header?.scriptUrl || "";
+
+    rowsHEO.innerHTML = "";
+    rowsSpotter.innerHTML = "";
+    rowsHelper.innerHTML = "";
+    rowsEquip.innerHTML = "";
+
+    (data.manpower?.HEO || []).forEach(r => addManRow("HEO", r));
+    (data.manpower?.Spotter || []).forEach(r => addManRow("Spotter", r));
+    (data.manpower?.Helper || []).forEach(r => addManRow("Helper", r));
+
+    (data.equipment || []).forEach(r => addEquipRow(r));
+
+    // Ensure at least one row per section
+    if(!rowsHEO.children.length) addManRow("HEO");
+    if(!rowsSpotter.children.length) addManRow("Spotter");
+    if(!rowsHelper.children.length) addManRow("Helper");
+    if(!rowsEquip.children.length) addEquipRow();
+
+    setStatus("Loaded saved form (OT cleared by rule).");
+  } catch(e){
+    localStorage.removeItem(STORAGE_KEY);
+  }
+}
+
+function makeInput(type, placeholder="", value=""){
+  const i = document.createElement("input");
+  i.type = type;
+  i.placeholder = placeholder;
+  i.value = value ?? "";
+  return i;
+}
+
+function makeXBtn(onClick){
+  const b = document.createElement("button");
+  b.className = "xbtn";
+  b.textContent = "X";
+  b.addEventListener("click", onClick);
+  return b;
+}
+
+// ---------- MANPOWER ----------
+function getManContainer(role){
+  if(role === "HEO") return rowsHEO;
+  if(role === "Spotter") return rowsSpotter;
+  return rowsHelper;
+}
+
+function addManRow(role, data = {}){
+  const wrap = document.createElement("div");
+  wrap.className = "rowMan";
+
+  const name = makeInput("text","Name", data.name || "");
+  const work = makeInput("number","Work Hours", data.workHours || "");
+  work.step = "0.25";
+
+  const ot = makeInput("number","OT Hours", data.otHours || "");
+  ot.step = "0.25";
+
+  const x = makeXBtn(() => { wrap.remove(); save(); });
+
+  [name, work, ot].forEach(el => el.addEventListener("input", save));
+  getManContainer(role).appendChild(wrap);
+  wrap.append(name, work, ot, x);
+}
+
+function serializeMan(container){
+  const rows = [];
+  [...container.children].forEach(r => {
+    const inputs = r.querySelectorAll("input");
+    rows.push({
+      name: inputs[0]?.value || "",
+      workHours: inputs[1]?.value || "",
+      otHours: inputs[2]?.value || ""
+    });
+  });
+  return rows;
+}
+
+// ---------- EQUIPMENT ----------
+function addEquipRow(data = {}){
+  const wrap = document.createElement("div");
+  wrap.className = "rowEq";
+
+  const eq = makeInput("text","Equipment Name", data.equipmentName || "");
+  const before = makeInput("number","Before", data.before || "");
+  const after = makeInput("number","After", data.after || "");
+
+  before.step = "0.01";
+  after.step = "0.01";
+
+  const hmr = makeInput("number","HMR", data.hmr || "");
+  hmr.step = "0.01";
+  hmr.readOnly = true;
+  hmr.classList.add("readonly");
+
+  function compute(){
+    const v = num(after.value) - num(before.value);
+    hmr.value = (Number.isFinite(v) ? v : 0).toFixed(2);
+  }
+
+  before.addEventListener("input", () => { compute(); save(); });
+  after.addEventListener("input", () => { compute(); save(); });
+  eq.addEventListener("input", save);
+
+  const x = makeXBtn(() => { wrap.remove(); save(); });
+
+  wrap.append(eq, before, after, hmr, x);
+  rowsEquip.appendChild(wrap);
+
+  compute();
+}
+
+function serializeEquip(container){
+  const rows = [];
+  [...container.children].forEach(r => {
+    const inputs = r.querySelectorAll("input");
+    rows.push({
+      equipmentName: inputs[0]?.value || "",
+      before: inputs[1]?.value || "",
+      after: inputs[2]?.value || "",
+      hmr: inputs[3]?.value || ""
+    });
+  });
+  return rows;
+}
+
+// ---------- Buttons ----------
+document.querySelectorAll("[data-add]").forEach(btn => {
+  btn.addEventListener("click", () => addManRow(btn.getAttribute("data-add")));
+});
+
+document.getElementById("addEquipment").addEventListener("click", () => addEquipRow());
+
+document.getElementById("resetOt").addEventListener("click", () => {
+  [rowsHEO, rowsSpotter, rowsHelper].forEach(container => {
+    [...container.children].forEach(r => {
+      const ot = r.querySelectorAll("input")[2];
+      if(ot) ot.value = "";
+    });
+  });
+  setStatus("OT cleared.");
+});
+
+document.getElementById("clearSaved").addEventListener("click", () => {
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+});
+
+[elDate, elCP1, elCP2, elScriptUrl].forEach(el => el.addEventListener("input", save));
+
+// ---------- Submit ----------
+function buildPayload(){
+  return {
+    date: elDate.value || "",
+    cp1: elCP1.value || "",
+    cp2: elCP2.value || "",
+    manpower: [
+      ...serializeMan(rowsHEO).map(r => ({ role:"HEO", ...r })),
+      ...serializeMan(rowsSpotter).map(r => ({ role:"Spotter", ...r })),
+      ...serializeMan(rowsHelper).map(r => ({ role:"Helper", ...r }))
+    ],
+    equipment: serializeEquip(rowsEquip)
+  };
+}
+
+async function submitAll(){
+  const url = elScriptUrl.value.trim();
+  if(!url) return setStatus("Paste Apps Script Web App URL first.", false);
+
+  const payload = buildPayload();
+  if(!payload.date) return setStatus("Date is required.", false);
+
+  setStatus("Submitting...");
+  try{
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+    const text = await res.text();
+    let json;
+    try{ json = JSON.parse(text); } catch { json = { raw:text }; }
+
+    if(json.status === "ok"){
+      setStatus(`Submitted ✅ ${json.message || ""}`.trim());
+    } else {
+      setStatus(`Submit failed: ${json.message || text}`, false);
+    }
+  } catch(e){
+    setStatus(`Submit error: ${e.message}`, false);
+  }
+}
+
+document.getElementById("submitAll").addEventListener("click", submitAll);
+
+// INIT
+load();
