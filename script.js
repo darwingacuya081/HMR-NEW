@@ -411,50 +411,68 @@ async function saveDraftToCloud() {
   }
 }
 
-async function loadDraftFromCloud() {
+function loadDraftFromCloud() {
   const url = (elScriptUrl.value || "").trim();
   const key = (elDraftKey.value || "").trim();
   if (!url || !key) return setStatus("Set Script URL and Draft Key first.", false);
 
-  try {
-    const u = new URL(url);
-    u.searchParams.set("action", "draftGet");
-    u.searchParams.set("key", key);
+  setStatus("Loading draft from cloud...");
 
-    const res = await fetch(u.toString(), { method: "GET" });
-    const text = await res.text();
-    let json = null;
-    try { json = JSON.parse(text); } catch {}
+  // JSONP callback name (unique each call)
+  const cb = "__draft_cb_" + Date.now();
 
-    if (json.status !== "ok") return setStatus(json.message || "Draft load failed", false);
-    if (!json.data) return setStatus("No saved draft found for that key.", false);
+  // Build URL with action + key + cb
+  const u = new URL(url);
+  u.searchParams.set("action", "draftGet");
+  u.searchParams.set("key", key);
+  u.searchParams.set("cb", cb);
 
-    // apply draft data
-    const d = json.data;
+  // Define callback
+  window[cb] = (json) => {
+    try {
+      if (!json || json.status !== "ok") {
+        setStatus((json && json.message) || "Draft load failed", false);
+        return;
+      }
+      if (!json.data) {
+        setStatus("No saved draft found for that key.", false);
+        return;
+      }
 
-    elDate.value = d.header?.date || elDate.value;
-    elCP1.value = d.header?.cp1 || elCP1.value;
-    elCP2.value = d.header?.cp2 || elCP2.value;
+      const d = json.data;
 
-    rowsHEO.innerHTML = "";
-    rowsSpotter.innerHTML = "";
-    rowsHelper.innerHTML = "";
-    rowsEquip.innerHTML = "";
+      elDate.value = d.header?.date || elDate.value;
+      elCP1.value = d.header?.cp1 || elCP1.value;
+      elCP2.value = d.header?.cp2 || elCP2.value;
 
-    (d.manpower?.HEO || []).forEach(r => addManRow("HEO", r));
-    (d.manpower?.Spotter || []).forEach(r => addManRow("Spotter", r));
-    (d.manpower?.Helper || []).forEach(r => addManRow("Helper", r));
-    (d.equipment || []).forEach(r => addEquipRow(r));
+      rowsHEO.innerHTML = "";
+      rowsSpotter.innerHTML = "";
+      rowsHelper.innerHTML = "";
+      rowsEquip.innerHTML = "";
 
-    // OT rule still applies on reload if you want:
-    // (leave as-is; your save() already blanks OT in local persistence)
+      (d.manpower?.HEO || []).forEach(r => addManRow("HEO", r));
+      (d.manpower?.Spotter || []).forEach(r => addManRow("Spotter", r));
+      (d.manpower?.Helper || []).forEach(r => addManRow("Helper", r));
+      (d.equipment || []).forEach(r => addEquipRow(r));
 
-    save(); // store locally too
+      save(); // stores locally + schedules cloud save
+      setStatus("Loaded draft from cloud ✅");
+    } finally {
+      // cleanup
+      delete window[cb];
+      script.remove();
+    }
+  };
 
-    setStatus("Loaded draft from cloud ✅");
-  } catch (e) {
-    setStatus("Cloud draft load failed: " + e.message, false);
-  }
+  // Inject script tag (JSONP)
+  const script = document.createElement("script");
+  script.src = u.toString();
+  script.onerror = () => {
+    setStatus("Draft load failed (network/CORS).", false);
+    delete window[cb];
+    script.remove();
+  };
+  document.body.appendChild(script);
 }
 
 // --- Draft sync listeners (attach once) ---
