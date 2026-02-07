@@ -12,6 +12,7 @@ const rowsHelper = document.getElementById("rows-Helper");
 const rowsEquip = document.getElementById("rows-Equipment");
 
 const elDraftKey = document.getElementById("draftKey");
+const btnSaveDraft = document.getElementById("saveDraft");
 const btnLoadDraft = document.getElementById("loadDraft");
 
 
@@ -50,7 +51,6 @@ function save(){
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   setStatus("Saved locally (OT will NOT restore after refresh).");
-  scheduleCloudDraftSave();
 }
 
 function load(){
@@ -379,17 +379,10 @@ function buildDraftObject() {
   };
 }
 
-let draftSaveTimer = null;
-
-function scheduleCloudDraftSave() {
-  clearTimeout(draftSaveTimer);
-  draftSaveTimer = setTimeout(saveDraftToCloud, 600); // debounce
-}
-
 async function saveDraftToCloud() {
   const url = (elScriptUrl.value || "").trim();
   const key = (elDraftKey.value || "").trim();
-  if (!url || !key) return;
+  if (!url || !key) return setStatus("Set Script URL and Draft Key first.", false);
 
   const payload = {
     action: "draftSave",
@@ -397,17 +390,17 @@ async function saveDraftToCloud() {
     data: buildDraftObject()
   };
 
+  setStatus("Saving draft to cloud...");
   try {
     await fetch(url, {
       method: "POST",
-      mode: "no-cors", // ✅ IMPORTANT for GitHub Pages -> Apps Script
+      mode: "no-cors",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload)
     });
-
-    setStatus("Draft sent to cloud ✅ (check Drafts sheet)");
+    setStatus("Draft saved to cloud ✅");
   } catch (e) {
-    setStatus("Cloud draft sync failed: " + e.message, false);
+    setStatus("Draft save failed: " + e.message, false);
   }
 }
 
@@ -476,24 +469,18 @@ function loadDraftFromCloud() {
 }
 
 // --- Draft sync listeners (attach once) ---
+if (btnSaveDraft) btnSaveDraft.addEventListener("click", saveDraftToCloud);
 if (btnLoadDraft) btnLoadDraft.addEventListener("click", loadDraftFromCloud);
-if (elDraftKey) elDraftKey.addEventListener("input", save);
 
 function autoLoadDraftIfReady() {
   const url = (elScriptUrl.value || "").trim();
   const key = (elDraftKey.value || "").trim();
   if (url && key) loadDraftFromCloud();
 }
+
 // INIT
 load();
-
-// Auto-load cloud draft if Script URL + DraftKey exist
-if ((elScriptUrl.value || "").trim() && (elDraftKey.value || "").trim()) {
-  loadDraftFromCloud();
-}
-
 refreshMasterData();
-autoLoadDraftIfReady();
 
 // When scriptUrl changes, re-fetch autocomplete
 elScriptUrl.addEventListener("change", refreshMasterData);
