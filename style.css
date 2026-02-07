@@ -223,7 +223,7 @@ h2{margin:0;font-size:18px}
 
   /* Equipment header can be hidden on mobile (optional) */
   .equipHeader {
-    display: none;
+    display:;
   }
 
   /* Equipment rows become vertical stack */
