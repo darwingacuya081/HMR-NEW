@@ -121,30 +121,6 @@ h2{margin:0;font-size:18px}
    ========================= */
 @media (max-width: 768px) {
 
-  *{ max-width: 100%; }
-
-  /* Make inputs/buttons not look "zoomed" on mobile */
-  body{
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-  }
-  
-  input, button{
-    font-size: 16px; /* prevents iOS auto-zoom and improves readability */
-  }
-  
-  /* Ensure cards and grids never exceed screen width */
-  .wrap, .card, .rows{
-    width: 100%;
-    max-width: 100%;
-  }
-  
-  /* Make sure long inputs (like Script URL) wrap and don't stretch page */
-  input{
-    max-width: 100%;
-  }
-
-  /* prevent sideways scroll */
   html, body {
     width: 100%;
     overflow-x: hidden;
@@ -160,90 +136,73 @@ h2{margin:0;font-size:18px}
     margin-bottom: 10px;
   }
 
-  /* Draft key area */
-  .field {
-    width: 100%;
-  }
-
-  /* Make the top row fields stack */
+  /* Top inputs: stack */
   .topRow {
-    display: grid !important;
     grid-template-columns: 1fr !important;
     gap: 10px;
   }
 
-  .topRow .field,
-  .topRow .field.scriptUrl {
+  .scriptUrl input {
+    min-width: 0 !important;
     width: 100%;
-    min-width: 0;
   }
 
-  /* Card spacing */
-  .card {
-    padding: 12px;
-    border-radius: 14px;
+  input {
+    width: 100%;
+    min-width: 0 !important;
+    max-width: 100%;
   }
 
-  .cardHead {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-  .cardHead h2 {
-    font-size: 16px;
-  }
-
-  /* Buttons smaller on mobile */
+  /* Buttons */
   .btn, .btnPrimary, .btnSecondary, .btnDanger {
     padding: 10px 12px;
     font-size: 13px;
   }
 
-  /* Manpower: Name full width then Work/OT side-by-side then X */
-  .rowMan{
-    display:grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap:8px;
-    padding:10px;
-    border-radius:12px;
-  }
-  
-  /* Name spans full width */
-  .rowMan input:nth-child(1){
-    grid-column: 1 / -1;
-  }
-  
-  /* X button spans full width and aligns right */
-  .rowMan .xbtn{
-    grid-column: 1 / -1;
-    justify-self: end;
-    width: 56px;
+  /* Hide the equipment header row on mobile */
+  .equipHeader { display: none; }
+
+  /* ===== MANPOWER ROWS (no overflow) =====
+     order in HTML: name, work, ot, X
+     make: name full width, then Work + OT + X in same line
+  */
+  .rowMan {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 44px !important;
+    grid-template-areas:
+      "name name name"
+      "work ot x";
+    gap: 8px !important;
+    padding: 10px;
+    border-radius: 12px;
   }
 
-  /* Equipment: Name full width then Before/After side-by-side then HMR then X */
-  .rowEq{
-    display:grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap:8px;
-    padding:10px;
-    border-radius:12px;
+  .rowMan input:nth-child(1) { grid-area: name; }
+  .rowMan input:nth-child(2) { grid-area: work; }
+  .rowMan input:nth-child(3) { grid-area: ot; }
+  .rowMan .xbtn { grid-area: x; justify-self: end; width: 44px; }
+
+  /* ===== EQUIPMENT ROWS (no overflow) =====
+     order: eq, before, after, hmr, X
+     make: eq full width, then Before+After+X, then HMR full width
+  */
+  .rowEq {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 44px !important;
+    grid-template-areas:
+      "eq eq eq"
+      "before after x"
+      "hmr hmr hmr";
+    gap: 8px !important;
+    padding: 10px;
+    border-radius: 12px;
   }
-  
-  .rowEq input:nth-child(1){
-    grid-column: 1 / -1; /* equipment name */
-  }
-  
-  .rowEq input:nth-child(4){
-    grid-column: 1 / -1; /* HMR full width */
-  }
-  
-  .rowEq .xbtn{
-    grid-column: 1 / -1;
-    justify-self: end;
-    width: 56px;
-  }
+
+  .rowEq input:nth-child(1) { grid-area: eq; }
+  .rowEq input:nth-child(2) { grid-area: before; }
+  .rowEq input:nth-child(3) { grid-area: after; }
+  .rowEq input:nth-child(4) { grid-area: hmr; }
+  .rowEq .xbtn { grid-area: x; justify-self: end; width: 44px; }
 
   /* Bottom bar stack */
   .bottomBar {
@@ -258,7 +217,5 @@ h2{margin:0;font-size:18px}
     gap: 10px;
   }
 
-  #submitAll {
-    width: 100%;
-  }
+  #submitAll { width: 100%; }
 }
