@@ -112,7 +112,7 @@ function makeXBtn(onClick){
 }
 
 // ---------- MANPOWER ----------
-function makeCell(labelText, inputEl) {
+function makeCell(labelText, inputEl){
   const cell = document.createElement("div");
   cell.className = "cell";
 
@@ -147,7 +147,10 @@ function addManRow(role, data = {}){
     makeCell("OT Hours", ot),
     x
   );
+
+  getManContainer(role).appendChild(wrap);
 }
+
 
 // ---------- EQUIPMENT ----------
 function addEquipRow(data = {}){

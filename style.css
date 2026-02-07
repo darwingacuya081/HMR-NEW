@@ -233,12 +233,6 @@ h2{margin:0;font-size:18px}
       grid-template-columns: 1fr 1fr 1fr 1fr;
     }
 
-  /* tighter row spacing */
-    .rowMan,
-    .rowEq {
-      padding: 12px 10px;
-    }
-
   /* subtle divider between rows (very light) */
     .rowMan + .rowMan,
     .rowEq + .rowEq{
@@ -267,9 +261,10 @@ h2{margin:0;font-size:18px}
     border-radius: 12px;
   }
 
-  .rowMan input:nth-child(1) { grid-area: name; }
-  .rowMan input:nth-child(2) { grid-area: work; }
-  .rowMan input:nth-child(3) { grid-area: ot; }
+  
+  .rowMan .cell:nth-child(1) { grid-area: name; }
+  .rowMan .cell:nth-child(2) { grid-area: work; }
+  .rowMan .cell:nth-child(3) { grid-area: ot; }
   .rowMan .xbtn { grid-area: x; justify-self: end; width: 44px; }
 
   /* ===== EQUIPMENT ROWS (no overflow) =====
@@ -288,10 +283,10 @@ h2{margin:0;font-size:18px}
     border-radius: 12px;
   }
 
-  .rowEq input:nth-child(1) { grid-area: eq; }
-  .rowEq input:nth-child(2) { grid-area: before; }
-  .rowEq input:nth-child(3) { grid-area: after; }
-  .rowEq input:nth-child(4) { grid-area: hmr; }
+  .rowEq .cell:nth-child(1) { grid-area: eq; }
+  .rowEq .cell:nth-child(2) { grid-area: before; }
+  .rowEq .cell:nth-child(3) { grid-area: after; }
+  .rowEq .cell:nth-child(4) { grid-area: hmr; }
   .rowEq .xbtn { grid-area: x; justify-self: end; width: 44px; }
 
   /* Bottom bar stack */
