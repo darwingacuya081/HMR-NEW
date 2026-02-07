@@ -229,14 +229,12 @@ function buildPayload(){
   // ✅ Filter rule: don't submit if Work Hours is blank (or not a number)
   const manpowerFiltered = manpowerAll.filter(r => {
     const name = String(r.name || "").trim();
-    const work = String(r.workHours || "").trim();
-
-    if (!name) return false;       // no name = ignore
-    if (!work) return false;       // no work hours = ignore
-
-    // Optional: ensure it's a valid number (uncomment if you want)
-    // if (!Number.isFinite(parseFloat(work))) return false;
-
+    const work = parseFloat(r.workHours);
+  
+    if (!name) return false;
+    if (!Number.isFinite(work)) return false;
+    if (work <= 0) return false;
+  
     return true;
   });
 
