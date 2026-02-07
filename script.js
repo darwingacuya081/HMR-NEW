@@ -116,6 +116,8 @@ function addManRow(role, data = {}){
   wrap.className = "rowMan";
 
   const name = makeInput("text","Name", data.name || "");
+  name.setAttribute("list", role === "HEO" ? "dl-heo" : role === "Spotter" ? "dl-spotter" : "dl-helper");
+
   const work = makeInput("number","Work Hours", data.workHours || "");
   work.step = "0.25";
 
@@ -166,6 +168,7 @@ function addEquipRow(data = {}){
 
   before.addEventListener("input", () => { compute(); save(); });
   after.addEventListener("input", () => { compute(); save(); });
+  eq.setAttribute("list", "dl-equipment");
   eq.addEventListener("input", save);
 
   const x = makeXBtn(() => { wrap.remove(); save(); });
