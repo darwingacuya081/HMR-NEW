@@ -143,8 +143,15 @@ function addManRow(role, data = {}){
   const wrap = document.createElement("div");
   wrap.className = "rowMan";
 
+  const roleToDatalist = {
+    HEO: "dl-heo",
+    Spotter: "dl-spotter",
+    Helper: "dl-helper",
+    Flagman: "dl-flagman"
+  };
+  
   const name = makeInput("text","Name", data.name || "");
-  name.setAttribute("list", role === "HEO" ? "dl-heo" : role === "Spotter" ? "dl-spotter" : "dl-helper" : "dl-flagman");
+  name.setAttribute("list", roleToDatalist[role] || "dl-helper");
 
   const work = makeInput("number","Work Hours", data.workHours || "");
   work.step = "0.5";
