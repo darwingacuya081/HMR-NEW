@@ -214,15 +214,7 @@ h2{margin:0;font-size:18px}
     height: 44px;
   }
 
-  .mobileHeader {
-  display: grid;
-  gap: 8px;
-  color: var(--muted);
-  font-size: 12px;
-  margin: 6px 0 10px 0;
-  padding-left: 4px;
-  }
-
+  
   /* subtle divider between rows (very light) */
     .rowMan + .rowMan,
     .rowEq + .rowEq{
