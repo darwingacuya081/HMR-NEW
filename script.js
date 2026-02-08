@@ -41,13 +41,13 @@ function save(){
       HEO: serializeMan(rowsHEO),
       Spotter: serializeMan(rowsSpotter),
       Helper: serializeMan(rowsHelper),
-      Helper: serializeMan(rowsFlagman)
+      Flagman: serializeMan(rowsFlagman)
     },
     equipment: serializeEquip(rowsEquip)
   };
 
   // OT rule: blank OT before saving
-  ["HEO","Spotter","Helper"].forEach(role => {
+  ["HEO","Spotter","Helper","Flagman"].forEach(role => {
     data.manpower[role] = data.manpower[role].map(r => ({...r, otHours:""}));
   });
 
