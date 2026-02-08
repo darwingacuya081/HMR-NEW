@@ -73,7 +73,7 @@ h2{margin:0;font-size:18px}
 
 .manHeader{
   display:grid;
-  grid-template-columns: 1.2fr 150px 170px 44px;
+  grid-template-columns: 1.2fr 160px 170px 44px;
   gap:10px;
   color:var(--muted);
   font-size:12px;
