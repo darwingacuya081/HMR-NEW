@@ -224,12 +224,12 @@ h2{margin:0;font-size:18px}
   }
 
   /* Manpower header layout */
-    .mobileHeader.manpowerHeader{
+    /.mobileHeader.manpowerHeader{
       grid-template-columns: 1fr 1fr 1fr;
     }
 
   /* Equipment header layout */
-    .mobileHeader.equipmentHeader{
+    /.mobileHeader.equipmentHeader{
       grid-template-columns: 1fr 1fr 1fr 1fr;
     }
 
