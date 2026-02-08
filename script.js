@@ -140,10 +140,10 @@ function addManRow(role, data = {}){
   name.setAttribute("list", role === "HEO" ? "dl-heo" : role === "Spotter" ? "dl-spotter" : "dl-helper");
 
   const work = makeInput("number","Work Hours", data.workHours || "");
-  work.step = "0.25";
+  work.step = "0.5";
 
   const ot = makeInput("number","OT Hours", data.otHours || "");
-  ot.step = "0.25";
+  ot.step = "0.5";
 
   const x = makeXBtn(() => { wrap.remove(); save(); });
 
