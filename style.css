@@ -89,7 +89,6 @@ h2{margin:0;font-size:18px}
   padding-left: 10px;
 }
 
-
 .equipHeader{
   display:grid;
   grid-template-columns: 1.2fr 170px 170px 170px 44px;
@@ -97,6 +96,18 @@ h2{margin:0;font-size:18px}
   color:var(--muted);
   font-size:12px;
   padding:0 2px 8px 2px;
+}
+.equipHeader div:nth-child(1){
+  padding-left: 5px;
+}
+.equipHeader div:nth-child(2){
+  padding-left: 10px;
+}
+.equipHeader div:nth-child(3){
+  padding-left: 10px;
+}
+.equipHeader div:nth-child(4){
+  padding-left: 10px;
 }
 
 .readonly{
