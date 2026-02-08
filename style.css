@@ -223,16 +223,6 @@ h2{margin:0;font-size:18px}
   padding-left: 4px;
   }
 
-  /* Manpower header layout */
-    /.mobileHeader.manpowerHeader{
-    /  grid-template-columns: 1fr 1fr 1fr;
-    /}
-
-  /* Equipment header layout */
-    /.mobileHeader.equipmentHeader{
-    /  grid-template-columns: 1fr 1fr 1fr 1fr;
-    /}
-
   /* subtle divider between rows (very light) */
     .rowMan + .rowMan,
     .rowEq + .rowEq{
